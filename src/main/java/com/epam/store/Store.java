@@ -1,50 +1,35 @@
 package com.epam.store;
 
-import java.math.BigDecimal;
-
 import com.epam.Product;
-import com.epam.data.MemoryDataStore;
-import com.epam.price.DiscountPriceCalculator;
-import com.epam.price.ExclusivePriceCalculator;
+import com.epam.data.Stock;
+import com.epam.price.PriceCalculator;
+
+import java.math.BigDecimal;
 
 public class Store {
 
-	private MemoryDataStore<Product> memoryDataStore = new MemoryDataStore<Product>();
-	private boolean exclusive;
+	private Stock stock;
+	private PriceCalculator priceCalculator;
 
 	public Store() {
 	}
 
-	public Store(boolean exclusive) {
-		this.exclusive = exclusive;
-	}
-
-	public void open() {
-		memoryDataStore.add(new Product("Book", new BigDecimal("100")));
-		memoryDataStore.add(new Product("UberLaptop", new BigDecimal("10000")));
+	public Store (Stock stock, PriceCalculator priceCalculator) {
+		this.stock = stock;
+		this.priceCalculator = priceCalculator;
 	}
 
 	public void printPrices() {
-		for (Product product : memoryDataStore.list()) {
-			BigDecimal price;
-			if (exclusive) {
-				price = new ExclusivePriceCalculator().price(product);
-			} else {
-				price = new DiscountPriceCalculator().price(product);
-			}
+		for (Product product : stock.list()) {
+			BigDecimal price = priceCalculator.price(product);
 			System.out.println(product.getName() + ": " + price);
 		}
 	}
 
 	public BigDecimal stock() {
 		BigDecimal sum = BigDecimal.ZERO;
-		for (Product product : memoryDataStore.list()) {
-			BigDecimal price;
-			if (exclusive) {
-				price = new ExclusivePriceCalculator().price(product);
-			} else {
-				price = new DiscountPriceCalculator().price(product);
-			}
+		for (Product product : stock.list()) {
+			BigDecimal price = priceCalculator.price(product);
 			sum = sum.add(price);
 		}
 		return sum;

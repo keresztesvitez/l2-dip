@@ -1,13 +1,15 @@
 package com.epam.price;
 
-import java.math.BigDecimal;
-
 import com.epam.Product;
 
-public class ExclusivePriceCalculator {
+import java.math.BigDecimal;
+
+public class ExclusivePriceCalculator implements PriceCalculator {
+
+	private static final String EXCLUSIVE_MULTIPLICATOR = "2";
 
 	public BigDecimal price(Product product) {
-		return product.getPrice().multiply(new BigDecimal("2"));
+		return product.getPrice().multiply(new BigDecimal(EXCLUSIVE_MULTIPLICATOR));
 	}
 
 }
